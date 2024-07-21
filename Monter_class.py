@@ -2,7 +2,22 @@ class Monster:
     def __init__(self):
         self.monsters = {}  # Dictionary to store monster info: {id: {'level': int, 'name': str}}
         self.object_cards = 0
-        self.total_monsters = 12  # Assuming total number of monsters is 12
+        self.total_monsters = 15    # There have 15 fruit monster
+                                    #1: cucumber
+                                    #2: apple
+                                    #3: kiwi
+                                    #4: banana
+                                    #5: orange
+                                    #6: coconut
+                                    #7: peach
+                                    #8: cherry
+                                    #9: pear
+                                    #10: pomegranate
+                                    #11: pineapple 
+                                    #12: watermelon
+                                    #13: melon
+                                    #14: grape
+                                    #15: strawberry
 
     def addObjectCard(self) -> dict[str, bool | str]:
         self.object_cards += 1
