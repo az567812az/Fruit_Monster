@@ -1,23 +1,15 @@
+import random
+
 class Monster:
     def __init__(self):
-        self.monsters = {}  # Dictionary to store monster info: {id: {'level': int, 'name': str}}
+        self.monsters = {}  # {id: {'level': int, 'name': str, 'path': str}}
         self.object_cards = 0
-        self.total_monsters = 15    # There have 15 fruit monster
-                                    #1: cucumber
-                                    #2: apple
-                                    #3: kiwi
-                                    #4: banana
-                                    #5: orange
-                                    #6: coconut
-                                    #7: peach
-                                    #8: cherry
-                                    #9: pear
-                                    #10: pomegranate
-                                    #11: pineapple 
-                                    #12: watermelon
-                                    #13: melon
-                                    #14: grape
-                                    #15: strawberry
+        self.total_monsters = 12  # 假設總共有12個怪物
+        self.default_data = {
+            0: {'name': 'Monster0', 'paths': {1: 'path/to/monster0_level1.jpg', 2: 'path/to/monster0_level2.jpg'}},
+            1: {'name': 'Monster1', 'paths': {1: 'path/to/monster1_level1.jpg', 2: 'path/to/monster1_level2.jpg'}},
+            # 繼續為其他怪物填寫資料
+        }
 
     def addObjectCard(self) -> dict[str, bool | str]:
         self.object_cards += 1
@@ -50,8 +42,8 @@ class Monster:
             return 0
 
     def getDefaultMonsterName(self, id: int) -> str:
-        if 1 <= id <= self.total_monsters:
-            return f"MonsterDefaultName{id}"
+        if 0 <= id < self.total_monsters:
+            return self.default_data[id]['name']
         else:
             return "Invalid Monster ID"
 
@@ -59,34 +51,49 @@ class Monster:
         if id in self.monsters:
             if level is None:
                 level = self.monsters[id]['level']
-            return f"MonsterName{id}_Level{level}"
+            return f"{self.default_data[id]['name']}_Level{level}"
         else:
             return "Monster does not exist"
 
+    def getMonsterPath(self, id: int, level: int | None = None) -> str:
+        if id in self.monsters:
+            if level is None:
+                level = self.monsters[id]['level']
+            return self.default_data[id]['paths'].get(level, "Path not found")
+        else:
+            return "Monster does not exist"
+
+    def getObjectCardPath(self) -> str:
+        return "path/to/object_card.jpg"
+
     def addMonster(self, id: int | None = None) -> dict[str, bool | str | int]:
         if id is not None:
-            if id not in self.monsters and 1 <= id <= self.total_monsters:
+            if id not in self.monsters and 0 <= id < self.total_monsters:
                 self.monsters[id] = {'level': 1, 'name': self.getDefaultMonsterName(id)}
                 return {'success': True, 'message': "Monster added", 'id': id}
             else:
                 return {'success': False, 'message': "Monster already exists or invalid ID"}
         else:
-            for new_id in range(1, self.total_monsters + 1):
-                if new_id not in self.monsters:
-                    self.monsters[new_id] = {'level': 1, 'name': self.getDefaultMonsterName(new_id)}
-                    return {'success': True, 'message': "Monster added", 'id': new_id}
-            return {'success': False, 'message': "All monsters already added"}
+            available_ids = [i for i in range(self.total_monsters) if i not in self.monsters]
+            if available_ids:
+                new_id = random.choice(available_ids)
+                self.monsters[new_id] = {'level': 1, 'name': self.getDefaultMonsterName(new_id)}
+                return {'success': True, 'message': "Monster added", 'id': new_id}
+            else:
+                return {'success': False, 'message': "All monsters already added"}
 
 # Example usage:
 # monster = Monster()
 # print(monster.addObjectCard())
-# print(monster.useObjectCard(1))
+# print(monster.useObjectCard(0))
 # print(monster.ObjectCardNum())
 # print(monster.currentMonsterNum())
 # print(monster.allMonsterNum())
-# print(monster.MonsterLv(1))
-# print(monster.getDefaultMonsterName(1))
-# print(monster.getMonsterName(1))
-# print(monster.getMonsterName(1, 2))
-# print(monster.addMonster(1))
+# print(monster.MonsterLv(0))
+# print(monster.getDefaultMonsterName(0))
+# print(monster.getMonsterName(0))
+# print(monster.getMonsterName(0, 2))
+# print(monster.addMonster(0))
 # print(monster.addMonster())
+# print(monster.getMonsterPath(0))
+# print(monster.getObjectCardPath())
